@@ -1,8 +1,8 @@
 #
 # Setup all targets to repeatedly run as tasks
 #
-.PHONY: all arduino-cli cores libs clean distclean nrf52_blink_info
-all: help
+.PHONY: default all arduino-cli cores libs clean distclean nrf52_blink_info
+default: help
 
 #
 # Global Variables
