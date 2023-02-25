@@ -56,6 +56,7 @@ $(CONFIG_FILE): $(ARDUINO_CLI)
 
 config-file: $(CONFIG_FILE)  ## Create local config file and add BOARD_MANAGER_URLS 
 	@$(ARDUINO_CLI) config add board_manager.additional_urls $(BOARD_MANAGER_URLS)
+	@$(ARDUINO_CLI) core update-index
 
 toolchain: $(CONFIG_FILE) $(ARDUINO_CLI)
 
