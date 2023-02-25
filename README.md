@@ -25,4 +25,15 @@ You will need to execute the following commands to get a clean install of MaxOSX
     libs                 Install required libraries
     nrf52_blink_info     Build nrf52_blink_info
     ```
-3.  Run `make nrf52_blink_info` to install arduino-cli, begin building
+3.  Run `make cores` to install arduino-cli, and the required toolchain
+    ```
+    $ make cores
+    ...
+    Installing platform sopor:nrf52@1.3.0...
+    Configuring platform....
+    Platform sopor:nrf52@1.3.0 installed
+    ```
+4.  Run `make nrf52_blink_info` to begin building
+    ```
+    $ make nrf52_blink_info
+    ```

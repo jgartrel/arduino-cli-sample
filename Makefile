@@ -56,11 +56,11 @@ $(CONFIG_FILE): $(ARDUINO_CLI)
 
 config-file: $(CONFIG_FILE)  ## Create local config file and add BOARD_MANAGER_URLS 
 	@$(ARDUINO_CLI) config add board_manager.additional_urls $(BOARD_MANAGER_URLS)
-	@$(ARDUINO_CLI) core update-index
 
 toolchain: $(CONFIG_FILE) $(ARDUINO_CLI)
 
 cores: toolchain  ## Install the required platform cores
+	@$(ARDUINO_CLI) core update-index
 	@$(ARDUINO_CLI) core install $(CORE)
 
 git-libs: $(GIT_LIB_DIRS) toolchain
@@ -69,7 +69,7 @@ libs: git-libs toolchain  ## Install required libraries
 	@$(ARDUINO_CLI) lib install "SdFat - Adafruit Fork"@1.5.1
 	@$(ARDUINO_CLI) lib install "Time"@1.6.1
 
-nrf52_blink_info: toolchain  ## Build nrf52_blink_info
+nrf52_blink_info: libs toolchain  ## Build nrf52_blink_info
 	$(ARDUINO_CLI) compile --fqbn $(BOARD) --export-binaries $@
 
 clean:  ## Remove all generated files
