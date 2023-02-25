@@ -30,3 +30,8 @@ You will need to execute the following commands to get a clean install of MaxOSX
     ```
     $ make all
     ```
+4.  Edit sample sketch and run `make nrf52_blink_info` to re-build the sample sketch
+    ```
+    $ vi nrf52_blink_info/nrf52_blink_info.ino
+    $ make nrf52_blink_info
+    ```
