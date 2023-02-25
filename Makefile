@@ -72,6 +72,8 @@ libs: git-libs toolchain  ## Install required libraries
 nrf52_blink_info: libs toolchain  ## Build nrf52_blink_info
 	$(ARDUINO_CLI) compile --fqbn $(BOARD) --export-binaries $@
 
+all: arduino-cli config-file cores libs nrf52_blink_info  ## make arduino-cli config-file cores libs nrf52_blink_info
+
 clean:  ## Remove all generated files
 	rm -rf nrf52_blink_info/build
 	rm -rf nrf52_blink_info/git_info.h
