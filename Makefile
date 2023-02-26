@@ -1,7 +1,7 @@
 #
 # Setup all targets to repeatedly run as tasks
 #
-.PHONY: default all arduino-cli cores libs clean distclean nrf52_blink_info
+.PHONY: default all arduino-cli config-file cores libs clean distclean sketches
 default: help
 
 #
@@ -22,6 +22,7 @@ SKETCHES := $(foreach file,$(wildcard */*.ino),$(basename $(notdir $(file))))
 #
 
 define SKETCH_template
+.PHONY: $(1)
 $(1): toolchain
 	@echo Building sketch: $$@
 	@touch $$@/git_info.h
@@ -70,7 +71,7 @@ libs: toolchain  ## Install required libraries
 
 sketches: toolchain $(SKETCHES)  ## Build all sketches
 
-all: arduino-cli config-file cores libs nrf52_blink_info  ## make arduino-cli config-file cores libs sketches
+all: arduino-cli config-file cores libs sketches  ## make arduino-cli config-file cores libs sketches
 
 clean:  ## Remove all generated files
 	rm -rf $(GENERATED_FILES)
