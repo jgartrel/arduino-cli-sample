@@ -17,13 +17,14 @@ You will need to execute the following commands to get a clean install of MaxOSX
 2.  Run `make` to get a list of things you can do
     ```
     $ make
-    all                  make arduino-cli config-file cores libs nrf52_blink_info
+    all                  make arduino-cli config-file cores libs sketches
     arduino-cli          Install arduino-cli
     clean                Remove all generated files
-    config-file          Create local config file and add BOARD_MANAGER_URLS 
+    config-file          Create local config file, add BOARD_MANAGER_URLS
     cores                Install the required platform cores
     distclean            Remove all non-versioned files
     libs                 Install required libraries
+    sketches             Build all sketches
     nrf52_blink_info     Build nrf52_blink_info
     ```
 3.  Run `make all` to install arduino-cli, and begin building the sample sketch
