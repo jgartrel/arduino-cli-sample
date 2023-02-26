@@ -14,6 +14,23 @@ ARDUINO_CLI ?= /usr/local/bin/arduino-cli
 CONFIG_FILE ?= $(ROOT_DIR)/arduino-cli.yaml
 CORES := sopor:nrf52
 BOARD := sopor:nrf52:whisperpt_2_2
+SKETCHES := $(foreach file,$(wildcard */*.ino),$(basename $(notdir $(file))))
+
+
+#
+# Dymanically generated targets
+#
+
+define SKETCH_template
+$(1): toolchain
+	@echo Building sketch: $$@
+	@touch $$@/git_info.h
+	$(ARDUINO_CLI) compile --fqbn $(BOARD) --export-binaries $$@
+GENERATED_FILES += $(1)/git_info.h $(1)/build
+endef
+
+$(foreach sketch,$(SKETCHES),$(eval $(call SKETCH_template,$(basename $(notdir $(sketch))))))
+
 
 #
 # Makefile targets
@@ -51,14 +68,12 @@ libs: toolchain  ## Install required libraries
 	@$(ARDUINO_CLI) lib install "SdFat - Adafruit Fork"@1.5.1
 	@$(ARDUINO_CLI) lib install "Time"@1.6.1
 
-nrf52_blink_info: toolchain  ## Build nrf52_blink_info
-	$(ARDUINO_CLI) compile --fqbn $(BOARD) --export-binaries $@
+sketches: toolchain $(SKETCHES)  ## Build all sketches
 
-all: arduino-cli config-file cores libs nrf52_blink_info  ## make arduino-cli config-file cores libs nrf52_blink_info
+all: arduino-cli config-file cores libs nrf52_blink_info  ## make arduino-cli config-file cores libs sketches
 
 clean:  ## Remove all generated files
-	rm -rf nrf52_blink_info/build
-	rm -rf nrf52_blink_info/git_info.h
+	rm -rf $(GENERATED_FILES)
 
 distclean:  ## Remove all non-versioned files
 	git clean -f -x -d
