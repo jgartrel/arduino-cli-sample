@@ -69,7 +69,7 @@ libs: git-libs toolchain  ## Install required libraries
 	@$(ARDUINO_CLI) lib install "SdFat - Adafruit Fork"@1.5.1
 	@$(ARDUINO_CLI) lib install "Time"@1.6.1
 
-nrf52_blink_info: libs toolchain  ## Build nrf52_blink_info
+nrf52_blink_info: toolchain  ## Build nrf52_blink_info
 	$(ARDUINO_CLI) compile --fqbn $(BOARD) --export-binaries $@
 
 all: arduino-cli config-file cores libs nrf52_blink_info  ## make arduino-cli config-file cores libs nrf52_blink_info
