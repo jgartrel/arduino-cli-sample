@@ -12,30 +12,8 @@ BOARD_MANAGER_URLS := https://jgartrel.github.io/arduino-board-index/package_sop
 ARDUINO_CLI ?= /usr/local/bin/arduino-cli
 # ARDUINO_CLI_VERSION ?= 0.31.0
 CONFIG_FILE ?= $(ROOT_DIR)/arduino-cli.yaml
-LIB_DIR := $(ROOT_DIR)/libraries
-CORE := sopor:nrf52
+CORES := sopor:nrf52
 BOARD := sopor:nrf52:whisperpt_2_2
-GIT_LIBS += https://github.com/jgartrel/KXTJ3-1057.git\#ee0d78f622518a530c3f7271af857c11c170bd82
-GIT_LIBS += https://github.com/jgartrel/Adafruit_SPIFlash.git\#7dbd50a6ff2699dd4a95d555969413dd2c2e45ba
-GIT_LIB_DIRS := $(patsubst %,$(LIB_DIR)/%,$(basename $(notdir $(GIT_LIBS))))
-
-
-#
-# Dymanically generated targets
-#
-
-# NOTE: This also depends on $(CONFIG_FILE), intentionally left out
-define GIT_LIB_template
-$(LIB_DIR)/$(basename $(notdir $(1))): $(ARDUINO_CLI)
-	@echo Installing library: $(1)
-	@$(ARDUINO_CLI) config set library.enable_unsafe_install true
-	@$(ARDUINO_CLI) lib install --git-url $(1)
-	@$(ARDUINO_CLI) config set library.enable_unsafe_install false
-# GIT_LIB_DIRS += $(LIB_DIR)/$(basename $(notdir $(1)))
-endef
-
-$(foreach gitlib,$(GIT_LIBS),$(eval $(call GIT_LIB_template,$(gitlib))))
-
 
 #
 # Makefile targets
@@ -54,18 +32,22 @@ $(CONFIG_FILE): $(ARDUINO_CLI)
 	@$(ARDUINO_CLI) config set directories.downloads $(ROOT_DIR)/Arduino15/staging
 	@$(ARDUINO_CLI) config set directories.user $(ROOT_DIR)
 
-config-file: $(CONFIG_FILE)  ## Create local config file and add BOARD_MANAGER_URLS 
+config-file: $(CONFIG_FILE)  ## Create local config file, add BOARD_MANAGER_URLS
 	@$(ARDUINO_CLI) config add board_manager.additional_urls $(BOARD_MANAGER_URLS)
 
 toolchain: $(CONFIG_FILE) $(ARDUINO_CLI)
 
 cores: toolchain  ## Install the required platform cores
 	@$(ARDUINO_CLI) core update-index
-	@$(ARDUINO_CLI) core install $(CORE)
+	@$(ARDUINO_CLI) core install $(CORES)
 
-git-libs: $(GIT_LIB_DIRS) toolchain
-
-libs: git-libs toolchain  ## Install required libraries
+libs: toolchain  ## Install required libraries
+	@$(ARDUINO_CLI) config set library.enable_unsafe_install true
+	@echo Installing KXTJ3-1057 using --git-url
+	@$(ARDUINO_CLI) lib install --git-url https://github.com/jgartrel/KXTJ3-1057.git#ee0d78f622518a530c3f7271af857c11c170bd82
+	@echo Installing Adafruit_SPIFlash using --git-url
+	@$(ARDUINO_CLI) lib install --git-url https://github.com/jgartrel/Adafruit_SPIFlash.git#7dbd50a6ff2699dd4a95d555969413dd2c2e45ba
+	@$(ARDUINO_CLI) config set library.enable_unsafe_install false
 	@$(ARDUINO_CLI) lib install "SdFat - Adafruit Fork"@1.5.1
 	@$(ARDUINO_CLI) lib install "Time"@1.6.1
 
