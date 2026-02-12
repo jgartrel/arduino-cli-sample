@@ -70,7 +70,7 @@ sketches: toolchain $(SKETCHES)  ## Build all sketches
 
 all: arduino-cli config-file cores libs sketches  ## make arduino-cli config-file cores libs sketches
 
-flash: sketches  ## Upload build to device
+flash: sketches  ## Upload build to device for nrf52_blink_info
 	@echo Flash using port: $(PORT)
 	@$(ARDUINO_CLI) upload --fqbn $(BOARD) --port $(PORT) nrf52_blink_info
 

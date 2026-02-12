@@ -44,3 +44,11 @@ You will need to execute the following commands to get a clean install of MaxOSX
     $ vi nrf52_blink_info/nrf52_blink_info.ino
     $ make nrf52_blink_info
     ```
+
+
+### Uploading code (only tested on Mac)
+1.  The following are some examples on how to upload code to a board. The Makefile will attempt to use the first `/dev/cu.usb*` serial port that it finds. A different port can be defined by using the 3rd example below or by setting an environment variable:
+    ```
+    $ BOARD=sopor:nrf52:whisperpt_3_7 make flash
+    $ BOARD=sopor:nrf52:whisperpt_3_7 PORT=/dev/cu.usbmodem101 make flash
+    ```
