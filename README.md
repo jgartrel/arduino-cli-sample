@@ -4,13 +4,20 @@ This repository demonstrates using Make to build arduino-cli projects with isola
 
 ### Mac Setup Prerequisites
 
-You will need to execute the following commands to get a clean install of MaxOSX up and running with the tools necessary to work with this repo.
+You will need to execute the following commands to get a clean install of MaxOSX up and running with the tools necessary to work with this repo. NOTE: This install was done with Sequoia: 15.1.1 and should result in a clean install up and running with the tools necessary to work with this repo.
 
 1. Install Xcode Command Line tools:
 
     ```  
     xcode-select --install
     ```  
+
+2. Install Rosetta (Only if you are on an M1 Mac):
+
+    ```
+    /usr/sbin/softwareupdate --install-rosetta --agree-to-license
+    ```
+
 
 ### Getting started
 1.  Clone this repository 
@@ -27,11 +34,12 @@ You will need to execute the following commands to get a clean install of MaxOSX
     sketches             Build all sketches
     nrf52_blink_info     Build nrf52_blink_info
     ```
-3.  Run `make all` to install arduino-cli, and begin building the sample sketch
+3.  Run `sudo make arduino-cli` to install arduino-cli (this only has to be done once)
+4.  Run `make all` to begin building the sample sketch
     ```
     $ make all
     ```
-4.  Edit sample sketch and run `make nrf52_blink_info` to re-build the sample sketch
+5.  Edit sample sketch and run `make nrf52_blink_info` to re-build the sample sketch
     ```
     $ vi nrf52_blink_info/nrf52_blink_info.ino
     $ make nrf52_blink_info
