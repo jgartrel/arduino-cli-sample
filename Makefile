@@ -1,7 +1,7 @@
 #
 # Setup all targets to repeatedly run as tasks
 #
-.PHONY: default all arduino-cli config-file cores libs clean distclean sketches
+.PHONY: default all arduino-cli config-file cores libs clean distclean sketches flash monitor
 default: help
 
 #
@@ -9,12 +9,14 @@ default: help
 #
 ROOT_DIR := $(patsubst %/,%,$(dir $(realpath $(lastword $(MAKEFILE_LIST)))))
 BOARD_MANAGER_URLS := https://jgartrel.github.io/arduino-board-index/package_sopor_index.json
-ARDUINO_CLI ?= /usr/local/bin/arduino-cli
-# ARDUINO_CLI_VERSION ?= 0.31.0
-CONFIG_FILE ?= $(ROOT_DIR)/arduino-cli.yaml
-CORES := sopor:nrf52
-BOARD := sopor:nrf52:whisperpt_2_2
+ARDUINO_CLI ?= $(shell command -v arduino-cli || echo "/usr/local/bin/arduino-cli")
+ARDUINO_CLI_VERSION ?= 1.1.1
+ARDUINO_CONFIG_FILE ?= $(ROOT_DIR)/arduino-cli.yaml
+export ARDUINO_CONFIG_FILE
+CORES := sopor:nrf52@1.3.1
+BOARD ?= sopor:nrf52:whisperpt_3_7
 SKETCHES := $(foreach file,$(wildcard */*.ino),$(basename $(notdir $(file))))
+PORT ?= $(firstword $(wildcard /dev/cu.usbmodem*) /dev/cu.usbmodemNotFound)
 
 
 #
@@ -38,22 +40,22 @@ $(foreach sketch,$(SKETCHES),$(eval $(call SKETCH_template,$(basename $(notdir $
 #
 
 $(ARDUINO_CLI):
-	curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | BINDIR=/usr/local/bin sh -s $(ARDUINO_CLI_VERSION)
+	curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | BINDIR=$(dir $(ARDUINO_CLI)) sh -s $(ARDUINO_CLI_VERSION)
 
 arduino-cli: $(ARDUINO_CLI)  ## Install arduino-cli
 	@$(ARDUINO_CLI) version
 
-$(CONFIG_FILE): $(ARDUINO_CLI)
-	@$(ARDUINO_CLI) config init --dest-file $(CONFIG_FILE)
+$(ARDUINO_CONFIG_FILE): $(ARDUINO_CLI)
+	@$(ARDUINO_CLI) config init --overwrite --dest-file $(ARDUINO_CONFIG_FILE)
 	@$(ARDUINO_CLI) config set board_manager.additional_urls $(BOARD_MANAGER_URLS)
 	@$(ARDUINO_CLI) config set directories.data $(ROOT_DIR)/Arduino15
 	@$(ARDUINO_CLI) config set directories.downloads $(ROOT_DIR)/Arduino15/staging
 	@$(ARDUINO_CLI) config set directories.user $(ROOT_DIR)
 
-config-file: $(CONFIG_FILE)  ## Create local config file, add BOARD_MANAGER_URLS
+config-file: $(ARDUINO_CONFIG_FILE)  ## Create local config file, add BOARD_MANAGER_URLS
 	@$(ARDUINO_CLI) config add board_manager.additional_urls $(BOARD_MANAGER_URLS)
 
-toolchain: $(CONFIG_FILE) $(ARDUINO_CLI)
+toolchain: $(ARDUINO_CONFIG_FILE) $(ARDUINO_CLI)
 
 cores: toolchain  ## Install the required platform cores
 	@$(ARDUINO_CLI) core update-index
@@ -61,17 +63,20 @@ cores: toolchain  ## Install the required platform cores
 
 libs: toolchain  ## Install required libraries
 	@$(ARDUINO_CLI) config set library.enable_unsafe_install true
-	@echo Installing KXTJ3-1057 using --git-url
-	@$(ARDUINO_CLI) lib install --git-url https://github.com/jgartrel/KXTJ3-1057.git#ee0d78f622518a530c3f7271af857c11c170bd82
-	@echo Installing Adafruit_SPIFlash using --git-url
-	@$(ARDUINO_CLI) lib install --git-url https://github.com/jgartrel/Adafruit_SPIFlash.git#7dbd50a6ff2699dd4a95d555969413dd2c2e45ba
 	@$(ARDUINO_CLI) config set library.enable_unsafe_install false
-	@$(ARDUINO_CLI) lib install "SdFat - Adafruit Fork"@1.5.1
 	@$(ARDUINO_CLI) lib install "Time"@1.6.1
 
 sketches: toolchain $(SKETCHES)  ## Build all sketches
 
 all: arduino-cli config-file cores libs sketches  ## make arduino-cli config-file cores libs sketches
+
+flash: sketches  ## Upload build to device
+	@echo Flash using port: $(PORT)
+	@$(ARDUINO_CLI) upload --fqbn $(BOARD) --port $(PORT) nrf52_blink_info
+
+monitor:  ## Connect to serial console on device
+	@echo Monitor using port: $(PORT)
+	@$(ARDUINO_CLI) monitor --fqbn $(BOARD) --port $(PORT)
 
 clean:  ## Remove all generated files
 	rm -rf $(GENERATED_FILES)
