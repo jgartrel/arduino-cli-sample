@@ -8,13 +8,13 @@ default: help
 # Global Variables
 #
 ROOT_DIR := $(patsubst %/,%,$(dir $(realpath $(lastword $(MAKEFILE_LIST)))))
-BOARD_MANAGER_URLS := https://jgartrel.github.io/arduino-board-index/package_sopor_index.json
+BOARD_MANAGER_URLS := https://files.seeedstudio.com/arduino/package_seeeduino_boards_index.json
 ARDUINO_CLI ?= $(shell command -v arduino-cli || echo "/usr/local/bin/arduino-cli")
 ARDUINO_CLI_VERSION ?= 1.1.1
 ARDUINO_CONFIG_FILE ?= $(ROOT_DIR)/arduino-cli.yaml
 export ARDUINO_CONFIG_FILE
-CORES := sopor:nrf52@1.3.1
-BOARD ?= sopor:nrf52:whisperpt_3_7
+CORES := Seeeduino:nrf52@1.1.10
+BOARD ?= Seeeduino:nrf52:xiaonRF52840Plus
 SKETCHES := $(foreach file,$(wildcard */*.ino),$(basename $(notdir $(file))))
 PORT ?= $(firstword $(wildcard /dev/cu.usbmodem*) /dev/cu.usbmodemNotFound)
 
