@@ -4,7 +4,7 @@ menu.debug=Debug
 # ----------------------------------
 # Seeed XIAO nRF52840 Plus
 # ----------------------------------
-xiaonRF52840Plus.name=Seeed XIAO nRF52840 Plus
+xiaonRF52840Plus.name=Seeed XIAO nRF52840 Plus (using global_include)
 
 # VID/PID for bootloader
 xiaonRF52840Plus.vid.0=0x2886
