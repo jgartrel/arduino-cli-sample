@@ -27,9 +27,8 @@ define SKETCH_template
 .PHONY: $(1)
 $(1): toolchain
 	@echo Building sketch: $$@
-	@touch $$@/git_info.h
 	$(ARDUINO_CLI) compile --fqbn $(BOARD) --export-binaries $$@
-GENERATED_FILES += $(1)/git_info.h $(1)/build
+GENERATED_FILES += $(1)/build
 endef
 
 $(foreach sketch,$(SKETCHES),$(eval $(call SKETCH_template,$(basename $(notdir $(sketch))))))
@@ -84,5 +83,5 @@ clean:  ## Remove all generated files
 distclean:  ## Remove all non-versioned files
 	git clean -f -x -d
 
-help:
+help:  ## Display the common make targets
 	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
