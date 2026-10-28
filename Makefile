@@ -13,7 +13,7 @@ ARDUINO_CLI ?= $(shell command -v arduino-cli || echo "/usr/local/bin/arduino-cl
 ARDUINO_CLI_VERSION ?= 1.1.1
 ARDUINO_CONFIG_FILE ?= $(ROOT_DIR)/arduino-cli.yaml
 export ARDUINO_CONFIG_FILE
-CORES := Seeeduino:nrf52@1.1.10
+CORES := Seeeduino:nrf52@1.1.13
 BOARD ?= shorepine:nrf52:xiaonRF52840Plus
 SKETCHES := $(foreach file,$(wildcard */*.ino),$(basename $(notdir $(file))))
 PORT ?= $(firstword $(wildcard /dev/cu.usbmodem*) /dev/cu.usbmodemNotFound)
