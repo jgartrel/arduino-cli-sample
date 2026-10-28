@@ -24,31 +24,34 @@ You will need to execute the following commands to get a clean install of MaxOSX
 2.  Run `make` to get a list of things you can do
     ```
     $ make
-    all                  make arduino-cli config-file cores libs sketches
-    arduino-cli          Install arduino-cli
-    clean                Remove all generated files
-    config-file          Create local config file, add BOARD_MANAGER_URLS
-    cores                Install the required platform cores
-    distclean            Remove all non-versioned files
-    libs                 Install required libraries
-    sketches             Build all sketches
-    nrf52_blink_info     Build nrf52_blink_info
+    all                      make arduino-cli config-file cores libs sketches
+    arduino-cli              Install arduino-cli
+    clean                    Remove all generated files
+    config-file              Create local config file, add BOARD_MANAGER_URLS
+    cores                    Install the required platform cores
+    distclean                Remove all non-versioned files
+    flash                    Upload build to device for nrf52_blink_info
+    help                     Display the common make targets
+    libs                     Install required libraries
+    monitor                  Connect to serial console on device
+    sketches                 Build all sketches
+    arduino-cli-sample.ino   Build arduino-cli-sample.ino
     ```
 3.  Run `sudo make arduino-cli` to install arduino-cli (this only has to be done once)
 4.  Run `make all` to begin building the sample sketch
     ```
     $ make all
     ```
-5.  Edit sample sketch and run `make nrf52_blink_info` to re-build the sample sketch
+5.  Edit sample sketch and run `make arduino-cli-sample.ino` to re-build the sample sketch
     ```
-    $ vi nrf52_blink_info/nrf52_blink_info.ino
-    $ make nrf52_blink_info
+    $ vi arduino-cli-sample.ino
+    $ make arduino-cli-sample.ino
     ```
 
 
 ### Uploading code (only tested on Mac)
 1.  The following are some examples on how to upload code to a board. The Makefile will attempt to use the first `/dev/cu.usb*` serial port that it finds. A different port can be defined by using the 3rd example below or by setting an environment variable:
     ```
-    $ BOARD=sopor:nrf52:whisperpt_3_7 make flash
-    $ BOARD=sopor:nrf52:whisperpt_3_7 PORT=/dev/cu.usbmodem101 make flash
+    $ BOARD=shorepine:nrf52:xiaonRF52840Plus make flash
+    $ BOARD=shorepine:nrf52:xiaonRF52840Plus PORT=/dev/cu.usbmodem101 make flash
     ```
