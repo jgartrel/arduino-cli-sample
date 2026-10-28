@@ -52,9 +52,9 @@ void setup() {
 }
 
 void loop() {
-  digitalWrite(LED_BUILTIN, LED_STATE_ON);
+  digitalWrite(LED_BUILTIN, LOW);
   delay(25);
-  digitalWrite(LED_BUILTIN, !LED_STATE_ON);
+  digitalWrite(LED_BUILTIN, HIGH);
   g_BLEUart.println(millis());
   delay(975);
 }
