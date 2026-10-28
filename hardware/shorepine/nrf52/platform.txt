@@ -1,9 +1,7 @@
 ## Override broken recipes
 
 ## Create uf2 file
-#recipe.objcopy.uf2.pattern="{tools.python.cmd}" "{runtime.platform.path}/tools/uf2conv/uf2conv.py" -f 0xADA52840 -c -o "{build.path}/{build.project_name}.uf2" "{build.path}/{build.project_name}.hex"
-recipe.objcopy.uf2.pattern="{tools.python.cmd}" "{runtime.platform.path}/tools/uf2conv/uf2_wrap.py" "{runtime.platform.path}/tools/uf2conv/uf2conv.py" "{build.board}" "{build.path}" "{build.source.path}" "{build.project_name}"
-
+recipe.objcopy.uf2.pattern="{tools.python.cmd}" "{runtime.platform.path}/tools/uf2conv/uf2conv.py" -f 0xADA52840 -c -o "{build.path}/{build.project_name}.uf2" "{build.path}/{build.project_name}.hex"
 
 #***************************************************
 # Select python executable on mac or windows
