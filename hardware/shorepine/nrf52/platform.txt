@@ -1,0 +1,18 @@
+## Override broken recipes
+
+## Create uf2 file
+#recipe.objcopy.uf2.pattern="{tools.python.cmd}" "{runtime.platform.path}/tools/uf2conv/uf2conv.py" -f 0xADA52840 -c -o "{build.path}/{build.project_name}.uf2" "{build.path}/{build.project_name}.hex"
+recipe.objcopy.uf2.pattern="{tools.python.cmd}" "{runtime.platform.path}/tools/uf2conv/uf2_wrap.py" "{runtime.platform.path}/tools/uf2conv/uf2conv.py" "{build.board}" "{build.path}" "{build.source.path}" "{build.project_name}"
+
+
+#***************************************************
+# Select python executable on mac or windows
+#***************************************************
+
+tools.python.cmd=python
+tools.python.cmd.windows=python.exe
+tools.python.cmd.macosx=python3
+
+## Override complier optimization
+#compiler.optimization_flag=-Ofast
+#compiler.optimization_flag=-O3
